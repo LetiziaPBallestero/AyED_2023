@@ -1,4 +1,4 @@
-package ejercicio6;
+package ejercicio6_1;
 
 import tp02.ejercicio1.ListaDeEnterosEnlazada;
 

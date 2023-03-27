@@ -9,7 +9,7 @@ public class PilaGenerica<T> {
 	private ListaGenerica<T> dato = new ListaEnlazadaGenerica<T>();
 
 	public void apilar(T dato) {
-		this.dato.agregarInicio(dato);
+		this.dato.agregarFinal(dato);
 	}
 
 	public T desapilar() {

@@ -1,8 +1,8 @@
-package ejercicio2;
+package ejercicio5;
 
 import tp03.ejercicio1.ArbolBinario;
 
-public class EntreNivelesTest {
+public class TestProfundidadDeArbolBinario {
 
 	public static void main(String[] args) {
 		ArbolBinario<Integer> A = new ArbolBinario<Integer>(1);
@@ -42,13 +42,12 @@ public class EntreNivelesTest {
 		
 		G.agregarHijoIzquierdo(N);
 		G.agregarHijoDerecho(O);
-
-		System.out.println("Entre los niveles 1 y 2");
-		A.entreNiveles(1,2);
 		
-		System.out.println ("Recorrido por niveles");
-		A.recorridoPorNivel();
+		ProfundidadDeArbolBinario test = new ProfundidadDeArbolBinario(A);
 
+		System.out.println("La suma de los nodos de nivel 2 es " + test.sumaElementosProfundidad(2));
+		// tiene que ser 22
+		
 
 	}
 

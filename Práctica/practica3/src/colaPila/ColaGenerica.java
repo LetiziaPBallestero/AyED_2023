@@ -22,7 +22,7 @@ public class ColaGenerica<T> {
 	}
 	
 	public boolean esVacia() {
-		return this.dato.fin();
+		return this.dato.esVacia();
 	}
 
 }

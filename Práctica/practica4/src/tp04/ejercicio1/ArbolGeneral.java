@@ -68,10 +68,6 @@ public class ArbolGeneral<T> {
 		}
 	}
 
-	public ListaEnlazadaGenerica<T> preOrden() {
-		return null;
-	}
-
 	/**
 	 * public int altura(): int devuelve la altura del árbol, es decir, la longitud
 	 * del camino más largo desde el nodo raíz hasta una hoja.
@@ -137,17 +133,17 @@ public class ArbolGeneral<T> {
 	 * de nodos.
 	 */
 	public Integer ancho() {
-		
+
 		ColaGenerica<ArbolGeneral<T>> cola = new ColaGenerica<ArbolGeneral<T>>();
 		ArbolGeneral<T> aux;
-		
+
 		cola.encolar(this);
 		cola.encolar(null);
-		
-		int cantidad=0;
+
+		int cantidad = 0;
 		int max = -1;
-		
-		// arranca 
+
+		// arranca
 		while (!cola.esVacia()) {
 			aux = cola.desencolar();
 			if (aux != null) {
@@ -159,18 +155,96 @@ public class ArbolGeneral<T> {
 					while (!lhijos.fin())
 						cola.encolar(lhijos.proximo());
 				}
-			}
-			else {
+			} else {
 				// al final del nivel comparo
-				if(cantidad > max)
+				if (cantidad > max)
 					max = cantidad;
-				cantidad=0;		
-				if (!cola.esVacia()) {			
+				cantidad = 0;
+				if (!cola.esVacia()) {
 					cola.encolar(null);
 				}
 			}
 		}
 		return max;
+	}
+
+	/**
+	 * retorna true si b es ancestro de a al sser un recorrido en profundidad tiene
+	 * que ser pre-orden
+	 */
+	public Boolean esAncestro(T a, T b) {
+		ListaGenerica<T> lista = new ListaEnlazadaGenerica<T>();
+		ListaGenerica<T> camino = new ListaEnlazadaGenerica<T>();
+		lista.agregarInicio(this.getDato());
+		esAncestro(a, b, lista, camino);
+		if ((camino.incluye(a)) && (camino.incluye(b))) {
+			return true;
+		}
+		return false;
+	}
+
+	private void esAncestro(T a, T b, ListaGenerica<T> lista, ListaGenerica<T> camino) {
+		// si encuentro B en la el árbol, que es el último,
+		// copio la lista, ya que la lógica es fijarse si
+		// b tiene como ancestro a A
+		if (this.getDato() == b)
+			clonar(lista, camino);
+		// es decir: no encontré B ahora ni nunca
+		if (camino.esVacia()) {
+			ListaGenerica<ArbolGeneral<T>> lHijos = this.getHijos();
+			lHijos.comenzar();
+			while ((!lHijos.fin()) && (camino.esVacia())) {
+				ArbolGeneral<T> aux = lHijos.proximo();
+				lista.agregarFinal(aux.getDato());
+				aux.esAncestro(a, b, lista, camino);
+				lista.eliminarEn(lista.tamanio());
+			}
+
+		}
+
+	}
+
+	private void clonar(ListaGenerica<T> lista, ListaGenerica<T> camino) {
+		lista.comenzar();
+		while (!lista.fin()) {
+			camino.agregarFinal(lista.proximo());
+		}
+	}
+
+	private Boolean buscarA(T a, T b, ArbolGeneral<T> arbol) {
+		Boolean ok = false;
+		if (arbol.getDato() == a) {
+			if (arbol.tieneHijos()) {
+				ListaGenerica<ArbolGeneral<T>> l = arbol.getHijos();
+				l.comenzar();
+				while ((!l.fin()) && (!ok))
+					ok = buscarB(a, b, l.proximo());
+			}
+		}
+		if (arbol.tieneHijos()) {
+			ListaGenerica<ArbolGeneral<T>> l = arbol.getHijos();
+			l.comenzar();
+			while ((!l.fin()) && (!ok))
+				ok = buscarA(a, b, l.proximo());
+		}
+		return ok;
+	}
+
+	private Boolean buscarB(T a, T b, ArbolGeneral<T> arbol) {
+		Boolean ok = false;
+		if (arbol.getDato() == b)
+			return true;
+		if (arbol.tieneHijos()) {
+			ListaGenerica<ArbolGeneral<T>> l = arbol.getHijos();
+			l.comenzar();
+			while ((!l.fin()) && (!ok))
+				ok = buscarB(a, b, l.proximo());
+		}
+		return ok;
+	}
+
+	public Boolean esAncestro2(T a, T b) {
+		return buscarA(a, b, this);
 	}
 
 }
